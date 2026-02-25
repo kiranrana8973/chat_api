@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install express mongoose socket.io jsonwebtoken bcryptjs multer firebase-admin dotenv cors)",
+      "Bash(npm install --save-dev nodemon)"
+    ]
+  }
+}
