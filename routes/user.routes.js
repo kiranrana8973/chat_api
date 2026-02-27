@@ -11,10 +11,10 @@ router.get('/', auth, async (req, res) => {
 
     if (req.query.search) {
       const searchRegex = new RegExp(req.query.search, 'i');
-      query.$or = [{ name: searchRegex }, { email: searchRegex }];
+      query.$or = [{ fname: searchRegex }, { lname: searchRegex }, { email: searchRegex }];
     }
 
-    const users = await User.find(query).select('-password').sort({ name: 1 });
+    const users = await User.find(query).select('-password').sort({ fname: 1, lname: 1 });
     res.json(users);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -26,10 +26,10 @@ router.get('/me', auth, async (req, res) => {
   res.json(req.user);
 });
 
-// PUT /api/users/me — update profile (name, avatar, fcmToken)
+// PUT /api/users/me — update profile
 router.put('/me', auth, async (req, res) => {
   try {
-    const allowedUpdates = ['name', 'avatar', 'fcmToken'];
+    const allowedUpdates = ['fname', 'lname', 'avatar', 'fcmToken', 'gender', 'batch'];
     const updates = {};
 
     for (const key of allowedUpdates) {

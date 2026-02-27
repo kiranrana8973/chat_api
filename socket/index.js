@@ -27,7 +27,7 @@ module.exports = (io) => {
   });
 
   io.on('connection', (socket) => {
-    console.log(`User connected: ${socket.user.name} (${socket.userId})`);
+    console.log(`User connected: ${socket.user.fname} ${socket.user.lname} (${socket.userId})`);
 
     // Join personal room
     socket.join(socket.userId);
@@ -88,7 +88,7 @@ module.exports = (io) => {
                 await admin.messaging().send({
                   token: receiver.fcmToken,
                   notification: {
-                    title: socket.user.name,
+                    title: `${socket.user.fname} ${socket.user.lname}`.trim(),
                     body: notificationBody,
                   },
                   data: {
@@ -170,7 +170,7 @@ module.exports = (io) => {
 
     // Handle disconnect
     socket.on('disconnect', () => {
-      console.log(`User disconnected: ${socket.user.name} (${socket.userId})`);
+      console.log(`User disconnected: ${socket.user.fname} ${socket.user.lname} (${socket.userId})`);
       User.findByIdAndUpdate(socket.userId, {
         isOnline: false,
         lastSeen: new Date(),

@@ -3,7 +3,12 @@ const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
+    fname: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    lname: {
       type: String,
       required: true,
       trim: true,
@@ -17,7 +22,30 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: false,
+    },
+    authProvider: {
+      type: String,
+      enum: ['local', 'google', 'apple'],
+      default: 'local',
+    },
+    oauthId: {
+      type: String,
+      default: null,
+    },
+    gender: {
+      type: String,
+      enum: ['male', 'female', 'other'],
+      default: null,
+    },
+    batch: {
+      type: String,
+      default: null,
+      trim: true,
+    },
+    isProfileComplete: {
+      type: Boolean,
+      default: false,
     },
     avatar: {
       type: String,
@@ -39,9 +67,15 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Prevent duplicate OAuth accounts
+userSchema.index(
+  { authProvider: 1, oauthId: 1 },
+  { unique: true, partialFilterExpression: { oauthId: { $ne: null } } }
+);
+
 // Hash password before saving
 userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+  if (!this.isModified('password') || !this.password) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
@@ -51,10 +85,11 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-// Strip password from JSON output
+// Strip password and oauthId from JSON output
 userSchema.methods.toJSON = function () {
   const user = this.toObject();
   delete user.password;
+  delete user.oauthId;
   return user;
 };
 

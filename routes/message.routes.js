@@ -130,7 +130,7 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
           type === 'image' ? 'Sent you an image' : text || '';
         await sendPushNotification(
           receiver.fcmToken,
-          req.user.name,
+          `${req.user.fname} ${req.user.lname}`.trim(),
           notificationBody,
           {
             conversationId: conversationId.toString(),

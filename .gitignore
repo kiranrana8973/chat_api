@@ -2,3 +2,5 @@ node_modules/
 uploads/
 .env
 serviceAccountKey.json
+.claude/
+CLAUDE.md
