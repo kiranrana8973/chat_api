@@ -3,7 +3,35 @@
     "allow": [
       "Bash(npm install express mongoose socket.io jsonwebtoken bcryptjs multer firebase-admin dotenv cors)",
       "Bash(npm install --save-dev nodemon)",
-      "Bash(npm install google-auth-library apple-signin-auth)"
+      "Bash(npm install google-auth-library apple-signin-auth)",
+      "Bash(python -m json.tool)",
+      "Bash(node -e \"process.stdin.on\\(''data'',d=>console.log\\(JSON.stringify\\(JSON.parse\\(d\\),null,2\\)\\)\\)\")",
+      "Bash(netstat -ano)",
+      "Bash(source /tmp/chat_test_vars)",
+      "Bash(__NEW_LINE_a72c696a77c593e0__ echo \"=== SEND TEXT MESSAGE \\(A -> B via REST\\) ===\")",
+      "Bash(curl -s -X POST http://localhost:3000/api/messages -H \"Content-Type: application/json\" -H \"Authorization: Bearer $TOKEN_A\" -d \"{\"\"conversationId\"\":\"\"$CONV_ID\"\",\"\"type\"\":\"\"text\"\",\"\"text\"\":\"\"Hello Amit!\"\"}\")",
+      "Bash(__NEW_LINE_d97b63a12a1e569b__ echo \"\")",
+      "Bash(echo \"=== SEND ANOTHER MESSAGE \\(B -> A\\) ===\")",
+      "Bash(curl -s -X POST http://localhost:3000/api/messages -H \"Content-Type: application/json\" -H \"Authorization: Bearer $TOKEN_B\" -d \"{\"\"conversationId\"\":\"\"$CONV_ID\"\",\"\"type\"\":\"\"text\"\",\"\"text\"\":\"\"Hi Kiran! How are you?\"\"}\")",
+      "Bash(__NEW_LINE_287f0a449ced91a6__ echo \"\")",
+      "Bash(curl -s \"http://localhost:3000/api/messages/$CONV_ID?page=1&limit=10\" -H \"Authorization: Bearer $TOKEN_A\")",
+      "Bash(node -e \"process.stdin.on\\(''data'',d=>{const j=JSON.parse\\(d\\);console.log\\(''Total messages:'', j.total\\);console.log\\(''Page:'', j.page, ''/'', j.totalPages\\);j.messages.forEach\\(m=>console.log\\('' -'', m.sender.fname, m.sender.lname+'':'', m.text\\)\\)}\\)\")",
+      "Bash(__NEW_LINE_ce3b44599738e0c3__ echo \"=== GET MESSAGES ===\")",
+      "Bash(curl -s \"http://localhost:3000/api/messages/$CONV_ID\" -H \"Authorization: Bearer $TOKEN_A\")",
+      "Bash(node -e \":*)",
+      "Bash(__NEW_LINE_446a1d7e3058abf1__ echo \"=== PROFILE UPDATE ===\")",
+      "Bash(/c/Users/kiran/Documents/Developer/API/chat_api/test_update.json:*)",
+      "Bash(__NEW_LINE_446a1d7e3058abf1__ curl -s -X PUT http://localhost:3000/api/users/me -H \"Content-Type: application/json\" -H \"Authorization: Bearer $TOKEN_A\" -d @/c/Users/kiran/Documents/Developer/API/chat_api/test_update.json)",
+      "Bash(__NEW_LINE_446a1d7e3058abf1__ echo \"\")",
+      "Bash(curl -s http://localhost:3000/api/users/me -H \"Authorization: Bearer $TOKEN_A\")",
+      "Bash(npm install --no-save socket.io-client)",
+      "Bash(__NEW_LINE_c5645c867798fdd7__ cd /c/Users/kiran/Documents/Developer/API/chat_api)",
+      "Bash(__NEW_LINE_e68fa8304410333f__ cd /c/Users/kiran/Documents/Developer/API/chat_api)",
+      "Bash(flutter create chat_app_softwarica --org com.softwarica)",
+      "Bash(flutter pub add flutter_bloc dio socket_io_client flutter_secure_storage google_sign_in sign_in_with_apple image_picker intl cached_network_image equatable)",
+      "Bash(flutter analyze)",
+      "WebFetch(domain:pub.dev)",
+      "Bash(flutter pub get)"
     ]
   }
 }

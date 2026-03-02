@@ -1,38 +1,38 @@
-const express = require('express');
-const auth = require('../middleware/auth');
-const upload = require('../middleware/upload');
-const Message = require('../models/Message');
-const Conversation = require('../models/Conversation');
-const User = require('../models/User');
+const express = require("express");
+const auth = require("../middleware/auth");
+const upload = require("../middleware/upload");
+const Message = require("../models/Message");
+const Conversation = require("../models/Conversation");
+const User = require("../models/User");
 
 const router = express.Router();
 
 // Helper: send push notification via FCM
 const sendPushNotification = async (fcmToken, title, body, data) => {
   try {
-    const admin = require('../config/firebase');
+    const admin = require("../config/firebase");
     if (!admin || !fcmToken) return;
 
     await admin.messaging().send({
       token: fcmToken,
       notification: { title, body },
       data,
-      android: { priority: 'high' },
-      apns: { payload: { aps: { sound: 'default', badge: 1 } } },
+      android: { priority: "high" },
+      apns: { payload: { aps: { sound: "default", badge: 1 } } },
     });
   } catch (error) {
     // If token is invalid, clear it
     if (
-      error.code === 'messaging/invalid-registration-token' ||
-      error.code === 'messaging/registration-token-not-registered'
+      error.code === "messaging/invalid-registration-token" ||
+      error.code === "messaging/registration-token-not-registered"
     ) {
-      await User.findOneAndUpdate({ fcmToken }, { fcmToken: '' });
+      await User.findOneAndUpdate({ fcmToken }, { fcmToken: "" });
     }
   }
 };
 
 // GET /api/messages/:conversationId — get paginated messages
-router.get('/:conversationId', auth, async (req, res) => {
+router.get("/:conversationId", auth, async (req, res) => {
   try {
     const { conversationId } = req.params;
     const page = parseInt(req.query.page) || 1;
@@ -46,16 +46,18 @@ router.get('/:conversationId', auth, async (req, res) => {
     });
 
     if (!conversation) {
-      return res.status(404).json({ error: 'Conversation not found.' });
+      return res.status(404).json({ error: "Conversation not found." });
     }
 
     const messages = await Message.find({ conversation: conversationId })
-      .populate('sender', '-password')
+      .populate("sender", "-password")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
 
-    const total = await Message.countDocuments({ conversation: conversationId });
+    const total = await Message.countDocuments({
+      conversation: conversationId,
+    });
 
     res.json({
       messages,
@@ -69,12 +71,12 @@ router.get('/:conversationId', auth, async (req, res) => {
 });
 
 // POST /api/messages — send a message (text or image)
-router.post('/', auth, upload.single('image'), async (req, res) => {
+router.post("/", auth, upload.single("image"), async (req, res) => {
   try {
     const { conversationId, type, text } = req.body;
 
     if (!conversationId) {
-      return res.status(400).json({ error: 'conversationId is required.' });
+      return res.status(400).json({ error: "conversationId is required." });
     }
 
     // Verify user is a participant
@@ -84,27 +86,27 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
     });
 
     if (!conversation) {
-      return res.status(404).json({ error: 'Conversation not found.' });
+      return res.status(404).json({ error: "Conversation not found." });
     }
 
     const messageData = {
       conversation: conversationId,
       sender: req.user._id,
-      type: type || 'text',
-      text: text || '',
+      type: type || "text",
+      text: text || "",
       readBy: [req.user._id],
     };
 
     // If image was uploaded
     if (req.file) {
-      messageData.type = 'image';
+      messageData.type = "image";
       messageData.image = `uploads/${req.file.filename}`;
     }
 
     const message = await Message.create(messageData);
     const populatedMessage = await Message.findById(message._id).populate(
-      'sender',
-      '-password'
+      "sender",
+      "-password",
     );
 
     // Update conversation's lastMessage
@@ -113,13 +115,13 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
     });
 
     // Emit via Socket.IO to the other participant
-    const io = req.app.get('io');
+    const io = req.app.get("io");
     const receiverId = conversation.participants.find(
-      (p) => p.toString() !== req.user._id.toString()
+      (p) => p.toString() !== req.user._id.toString(),
     );
 
     if (io && receiverId) {
-      io.to(receiverId.toString()).emit('new-message', populatedMessage);
+      io.to(receiverId.toString()).emit("new-message", populatedMessage);
     }
 
     // Send push notification to receiver
@@ -127,7 +129,7 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
       const receiver = await User.findById(receiverId);
       if (receiver && receiver.fcmToken) {
         const notificationBody =
-          type === 'image' ? 'Sent you an image' : text || '';
+          type === "image" ? "Sent you an image" : text || "";
         await sendPushNotification(
           receiver.fcmToken,
           `${req.user.fname} ${req.user.lname}`.trim(),
@@ -135,8 +137,8 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
           {
             conversationId: conversationId.toString(),
             senderId: req.user._id.toString(),
-            messageType: type || 'text',
-          }
+            messageType: type || "text",
+          },
         );
       }
     }
