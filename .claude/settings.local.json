@@ -31,7 +31,23 @@
       "Bash(flutter pub add flutter_bloc dio socket_io_client flutter_secure_storage google_sign_in sign_in_with_apple image_picker intl cached_network_image equatable)",
       "Bash(flutter analyze)",
       "WebFetch(domain:pub.dev)",
-      "Bash(flutter pub get)"
+      "Bash(flutter pub get)",
+      "Bash(tree -L 3 /c/Users/kiran/Documents/Developer/API/chat_api --ignore node_modules -a)",
+      "Bash(npm install)",
+      "Bash(npm view @nestjs/mongoose versions --json)",
+      "Bash(npm view @nestjs/mongoose@latest peerDependencies --json)",
+      "Bash(npm view @nestjs/common@latest version)",
+      "Bash(npm view @nestjs/core@latest version)",
+      "Bash(npm view @nestjs/jwt@latest peerDependencies --json)",
+      "Bash(npm view @nestjs/passport@latest peerDependencies --json)",
+      "Bash(npm view @nestjs/websockets@latest peerDependencies --json)",
+      "Bash(npx nest build)",
+      "Bash(timeout 10 node dist/main.js)",
+      "Bash(npm create vite@latest client -- --template react-ts)",
+      "Bash(npm install -D tailwindcss @tailwindcss/vite)",
+      "Bash(npm install react-router-dom socket.io-client axios lucide-react)",
+      "Bash(npx tsc --noEmit)",
+      "Bash(npm run build)"
     ]
   }
 }
